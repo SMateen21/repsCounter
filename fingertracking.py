@@ -77,26 +77,6 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5,
             break
         elif k == -1:
             continue
-        elif k == ord('a'):
-            # open = 1
-            coor_lst = [1]
-            for i in range(21):
-                landmark_data = [landmarks[0].landmark[i].x,
-                                 landmarks[0].landmark[i].y,
-                                 landmarks[0].landmark[i].z]
-                for j in landmark_data:
-                    coor_lst.append(j)
-            CoordinatesToCSV.writeLandmarks(coor_lst)
-        elif k == ord('s'):
-            # close = 0
-            coor_lst = [0]
-            for i in range(21):
-                landmark_data = [landmarks[0].landmark[i].x,
-                                 landmarks[0].landmark[i].y,
-                                 landmarks[0].landmark[i].z]
-                for j in landmark_data:
-                    coor_lst.append(j)
-            CoordinatesToCSV.writeLandmarks(coor_lst)
         elif k == ord('r'):
             count = 0
         else:
