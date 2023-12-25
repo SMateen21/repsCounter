@@ -1,11 +1,9 @@
 import cv2
-import keras.models
-
+import torch
 import mediapipe as mp
 import numpy as np
 import CoordinatesToCSV
-import tensorflow as tf
-from tensorflow import keras
+from torchmodel import FingerTracking
 
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
@@ -15,12 +13,14 @@ stage = None
 
 cap = cv2.VideoCapture(0)
 
-"""model = keras.models.load_model('repsCounter.keras')
+model = torch.load("repsCounter.pt")
+model.eval()
 
 
 def det_pos(data):
-    a = model.predict(data)
-    return a"""
+    d = torch.tensor(np.array(data), dtype=torch.float32)
+    a = model(d).detach().numpy()
+    return round(a[0])
 
 
 with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5,
@@ -37,12 +37,11 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5,
 
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-        try:
+        landmarks = results.multi_hand_world_landmarks
+        if landmarks is not None:
             curr_pos = []
-
             landmarks = results.multi_hand_world_landmarks
-            """for i in range(21):
+            for i in range(21):
                 landmark_data = [landmarks[0].landmark[i].x,
                                  landmarks[0].landmark[i].y,
                                  landmarks[0].landmark[i].z]
@@ -50,15 +49,14 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5,
                     curr_pos.append(j)
 
             prediction = det_pos(curr_pos)
-
             if prediction == 0 and stage != "down":
                 stage = "down"
-            if prediction == 0 and stage == "down":
+            if prediction == 1 and stage == "down":
                 stage = "up"
                 count += 1
-                print(count)"""
+                print(count)
 
-        except:
+        else:
             pass
 
         if results.multi_hand_landmarks:

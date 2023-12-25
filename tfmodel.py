@@ -17,7 +17,8 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(units=1, activation='sigmoid')
 ])
 
-model.compile(optimizer='adam', loss=tf.keras.losses.BinaryCrossentropy(),
+model.compile(optimizer=tf.keras.optimizers.Adam(),
+              loss=tf.keras.losses.BinaryCrossentropy(),
               metrics=['accuracy'])
 
 model.fit(x_train, y_train, epochs=15)
